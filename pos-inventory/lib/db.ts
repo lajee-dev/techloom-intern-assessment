@@ -23,7 +23,11 @@ if (!global._mongoose) {
 
 async function ensureMemoryMongo(): Promise<string> {
   if (!global._memoryMongoServer) {
-    global._memoryMongoServer = await MongoMemoryServer.create();
+    const memoryServerOptions = {
+      replSet: { count: 1 },
+    } as any;
+
+    global._memoryMongoServer = await MongoMemoryServer.create(memoryServerOptions);
   }
 
   return global._memoryMongoServer.getUri();
