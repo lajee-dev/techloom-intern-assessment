@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface Product {
   _id: string;
@@ -190,7 +191,7 @@ export default function ProductsPage() {
           <div className="field"><label htmlFor="product-name">Product name</label><input id="product-name" placeholder="e.g. Ceramic mug" value={name} onChange={(e) => setName(e.target.value)} required /></div>
           <div className="field"><label htmlFor="product-price">Price</label><input id="product-price" placeholder="0.00" type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} required /></div>
           <div className="field"><label htmlFor="product-stock">Opening stock</label><input id="product-stock" placeholder="0" type="number" min="0" value={stock} onChange={(e) => setStock(e.target.value)} required /></div>
-          <div className="field image-field"><label htmlFor="product-image">Product image</label><div className="image-picker">{imageUrl && <img className="upload-preview" src={imageUrl} alt="Selected product" />}<input id="product-image" type="file" accept="image/*" onChange={(e) => handleImageChange(e.target.files?.[0])} disabled={uploadingImage} /></div><span className="field-hint">{uploadingImage ? "Uploading..." : imageUrl ? "Image ready" : "Optional, max 5 MB"}</span></div>
+          <div className="field image-field"><label htmlFor="product-image">Product image</label><div className="image-picker">{imageUrl && <Image className="upload-preview" src={imageUrl} alt="Selected product" width={39} height={39} />}<input id="product-image" type="file" accept="image/*" onChange={(e) => handleImageChange(e.target.files?.[0])} disabled={uploadingImage} /></div><span className="field-hint">{uploadingImage ? "Uploading..." : imageUrl ? "Image ready" : "Optional, max 5 MB"}</span></div>
           <button className="button-primary" type="submit" disabled={loading}>{loading ? "Saving..." : editingId ? "Save changes" : "Add product"}</button>
           {editingId && <button className="button-quiet" type="button" onClick={resetForm}>Cancel</button>}
         </form>
@@ -203,7 +204,7 @@ export default function ProductsPage() {
               <tbody>
                 {products.length === 0 ? <tr><td colSpan={6} className="empty-state">No products yet. Add your first item above.</td></tr> : products.map((p) => (
                   <tr key={p._id}>
-                    <td><div className="product-cell">{p.imageUrl ? <img className="product-thumb" src={p.imageUrl} alt="" /> : <span className="product-thumb product-thumb-empty">—</span>}<div><Link className="product-name product-link" href={`/products/${p._id}`}>{p.name}</Link><div className="product-id">ID {p._id.slice(-8)}</div></div></div></td>
+                    <td><div className="product-cell">{p.imageUrl ? <Image className="product-thumb" src={p.imageUrl} alt="" width={42} height={42} /> : <span className="product-thumb product-thumb-empty">—</span>}<div><Link className="product-name product-link" href={`/products/${p._id}`}>{p.name}</Link><div className="product-id">ID {p._id.slice(-8)}</div></div></div></td>
                     <td className="number-cell">${p.price.toFixed(2)}</td><td className="number-cell">{p.stock}</td><td className="number-cell">{p.reserved}</td>
                     <td className={p.available < 5 ? "low-stock" : "available"}>{p.available}{p.available < 5 && " · low"}</td>
                     <td><div className="action-row"><button className="button-primary" onClick={() => addToCart(p)} disabled={p.available < 1}>Add</button><Link className="button-quiet" href={`/products/${p._id}`}>View</Link><button className="button-quiet" onClick={() => startEdit(p)}>Edit</button><button className="button-danger" onClick={() => handleDelete(p._id)}>Delete</button></div></td>

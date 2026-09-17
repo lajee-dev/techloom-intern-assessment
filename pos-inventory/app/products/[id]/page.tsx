@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 interface Product {
@@ -48,7 +49,7 @@ export default function ProductDetailPage({
         ) : (
           <section className="detail-panel">
             <div className="detail-image-wrap">
-              {product.imageUrl ? <img className="detail-image" src={product.imageUrl} alt={product.name} /> : <div className="detail-image detail-image-empty">No image</div>}
+              {product.imageUrl ? <Image className="detail-image" src={product.imageUrl} alt={product.name} width={800} height={800} /> : <div className="detail-image detail-image-empty">No image</div>}
             </div>
             <div className="detail-copy">
               <p className="eyebrow">Product detail</p>
