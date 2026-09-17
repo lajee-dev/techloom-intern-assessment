@@ -24,6 +24,16 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 This checkout does not use real authentication. On the first API request, the server generates a UUID and stores it in an `httpOnly` `checkout_user_id` cookie. Order creation and order history use that cookie value as `userId`.
 
+## Production product data
+
+The development catalog is stored in `data/products.json`. Seed it into the production MongoDB database with the production `MONGODB_URI` configured:
+
+```bash
+npm run seed:products
+```
+
+The command is idempotent and only inserts products that do not already exist by name. The application does not auto-seed production data.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -1,18 +1,10 @@
+import products from "@/data/products.json";
 import ProductModel from "@/lib/models/Product";
-
-const demoProducts = [
-  { name: "Moss Glass Tumbler", price: 24, category: "Kitchen", stock: 18, reserved: 0 },
-  { name: "Folded Linen Throw", price: 86, category: "Home", stock: 9, reserved: 0 },
-  { name: "Brass Desk Tray", price: 42, category: "Desk", stock: 14, reserved: 0 },
-  { name: "Stoneware Pour Over", price: 58, category: "Kitchen", stock: 11, reserved: 0 },
-  { name: "Daily Notes Notebook", price: 18, category: "Desk", stock: 30, reserved: 0 },
-  { name: "Oak Utility Hook", price: 16, category: "Home", stock: 22, reserved: 0 },
-];
 
 export async function ensureDemoProducts() {
   if (process.env.NODE_ENV === "production" || await ProductModel.exists({})) {
     return;
   }
 
-  await ProductModel.insertMany(demoProducts);
+  await ProductModel.insertMany(products);
 }
