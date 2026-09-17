@@ -1,6 +1,6 @@
 # POS Inventory
 
-**Deployment:** Vercel URL to be added after deployment  
+**Deployment:** https://pos-inventory-phi.vercel.app/  
 **Repository:** https://github.com/lajee-dev/techloom-intern-assessment
 
 ## Tech stack
@@ -91,10 +91,23 @@ PASS: only one checkout reserved the single available unit.
 
 ### Vercel output
 
-Run the same command after replacing `YOUR-DEPLOYMENT-URL` with the real Vercel URL and paste its output here:
+```text
+Concurrency test target: https://pos-inventory-phi.vercel.app
+Concurrent checkout requests: 10
+Orders created: 10
+Checkout successes: 1
+Stock conflicts (409): 9
+Unexpected responses: 0
+Expected result: 1 success, 9 conflicts
+PASS: only one checkout reserved the single available unit.
+```
+
+The live health check also returned `200` with `{"status":"connected"}`.
+
+To repeat the test:
 
 ```bash
-BASE_URL=https://YOUR-DEPLOYMENT-URL node scripts/concurrency-test.mjs
+BASE_URL=https://pos-inventory-phi.vercel.app node scripts/concurrency-test.mjs
 ```
 
 ## Verification
