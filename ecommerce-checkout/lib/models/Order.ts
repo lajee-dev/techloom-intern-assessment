@@ -24,7 +24,7 @@ const refundSchema = new Schema(
   {
     status: {
       type: String,
-      enum: ["pending", "processed", "failed"],
+      enum: ["pending", "processed", "failed", "REFUNDED"],
     },
     amount: { type: Number, min: 0 },
     processedAt: { type: Date },

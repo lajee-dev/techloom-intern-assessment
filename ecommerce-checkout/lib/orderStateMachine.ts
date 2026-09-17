@@ -11,8 +11,8 @@ export type OrderStatus = (typeof ORDER_STATUSES)[number];
 const transitions: Record<OrderStatus, readonly OrderStatus[]> = {
   pending: ["paid", "failed", "cancelled"],
   paid: ["refunded"],
-  failed: [],
-  cancelled: [],
+  failed: ["refunded"],
+  cancelled: ["refunded"],
   refunded: [],
 };
 
