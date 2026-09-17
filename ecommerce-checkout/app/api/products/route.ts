@@ -1,4 +1,5 @@
 import { dbConnect } from "@/lib/db";
+import { ensureDemoProducts } from "@/lib/demoProducts";
 import ProductModel from "@/lib/models/Product";
 import { getOrCreateUserId } from "@/lib/userIdentity";
 
@@ -53,6 +54,7 @@ export async function GET(request: Request) {
 
   const userId = await getOrCreateUserId();
   await dbConnect();
+  await ensureDemoProducts();
   const products = await ProductModel.find(query).sort({ createdAt: -1 }).lean().exec();
 
   return Response.json({ products, userId });

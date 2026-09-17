@@ -32,6 +32,11 @@ function writeCart(cart: CartItem[]) {
   return JSON.stringify(cart);
 }
 
+export async function GET() {
+  const cookieStore = await cookies();
+  return Response.json({ cart: readCart(cookieStore.get(CART_COOKIE)?.value) });
+}
+
 async function updateCart(
   request: Request,
   operation: "add" | "update" | "remove"
