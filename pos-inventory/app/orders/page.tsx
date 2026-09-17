@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 interface OrderItem {
   productId: string;
@@ -39,6 +40,7 @@ export default function OrdersPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadOrders();
   }, []);
 
@@ -80,7 +82,7 @@ export default function OrdersPage() {
         <main className="workspace">
           <div className="page-heading">
             <div><p className="eyebrow">Order desk</p><h1>Orders</h1><p className="lede">Track reservations, payments, and the next action for every sale.</p></div>
-            <nav className="nav-tabs" aria-label="Primary navigation"><a href="/">Products</a><a className="active" href="/orders">Orders</a></nav>
+            <nav className="nav-tabs" aria-label="Primary navigation"><Link href="/">Products</Link><Link className="active" href="/orders">Orders</Link></nav>
           </div>
           <section className="stat-grid" aria-label="Order summary">
             <div className="stat-card"><span className="stat-label">Total orders</span><strong className="stat-value">{orders.length}</strong></div>

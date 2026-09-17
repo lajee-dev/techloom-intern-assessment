@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Product {
   _id: string;
@@ -21,6 +22,7 @@ interface CartItem {
 }
 
 export default function ProductsPage() {
+  const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -41,6 +43,7 @@ export default function ProductsPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadProducts();
   }, []);
 
@@ -151,7 +154,7 @@ export default function ProductsPage() {
       return;
     }
     setCart([]);
-    window.location.href = "/orders";
+    router.push("/orders");
   }
 
   const totalUnits = products.reduce((sum, product) => sum + product.stock, 0);
@@ -172,8 +175,8 @@ export default function ProductsPage() {
             <p className="lede">Keep your catalog tidy and your available stock honest.</p>
           </div>
           <nav className="nav-tabs" aria-label="Primary navigation">
-            <a className="active" href="/">Products</a>
-            <a href="/orders">Orders</a>
+            <Link className="active" href="/">Products</Link>
+            <Link href="/orders">Orders</Link>
           </nav>
         </div>
 
