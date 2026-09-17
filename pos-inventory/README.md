@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ledger POS Inventory
 
-## Getting Started
+A Next.js POS inventory app with MongoDB, Cloudinary product images, product orders, stock reservations, checkout, and payment simulation.
 
-First, run the development server:
+## Local setup
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create `.env.local` with:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+MONGODB_URI=mongodb://127.0.0.1:27017/pos_inventory
+CRON_SECRET=replace-with-a-random-secret
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+For local development without a replica-set MongoDB, the app uses a transaction-capable in-memory MongoDB fallback. Production must use MongoDB Atlas or another replica-set deployment because checkout and payment use transactions.
 
-## Learn More
+## Verification
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploy to Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Push the `main` branch to GitHub.
+2. Import the repository into Vercel.
+3. Add these Production environment variables in Vercel Project Settings:
+   - `MONGODB_URI`
+   - `CRON_SECRET`
+   - `CLOUDINARY_CLOUD_NAME`
+   - `CLOUDINARY_API_KEY`
+   - `CLOUDINARY_API_SECRET`
+4. Use a MongoDB Atlas URI and allow Vercel access in Atlas Network Access.
+5. Redeploy after saving the variables.
 
-## Deploy on Vercel
+The Cloudinary API secret must only exist in server environment variables. Never commit `.env.local`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Available routes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `/` product catalog, image upload, cart, and order creation
+- `/products/:id` product detail with image
+- `/orders` checkout, payment, and cancellation workflow
+- `/api/health` database health check

@@ -20,13 +20,13 @@ interface Order {
   createdAt: string;
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  PENDING: "#999",
-  RESERVED: "#e0a800",
-  PAID: "#28a745",
-  CANCELLED: "#6c757d",
-  EXPIRED: "#dc3545",
-  FAILED: "#dc3545",
+const STATUS_CLASS: Record<string, string> = {
+  PENDING: "status-pending",
+  RESERVED: "status-reserved",
+  PAID: "status-paid",
+  CANCELLED: "status-cancelled",
+  EXPIRED: "status-expired",
+  FAILED: "status-failed",
 };
 
 export default function OrdersPage() {
@@ -67,82 +67,44 @@ export default function OrdersPage() {
     setBusyId(null);
   }
 
-  return (
-    <main style={{ maxWidth: 900, margin: "40px auto", fontFamily: "sans-serif" }}>
-      <h1>POS — Orders</h1>
-      <nav style={{ marginBottom: 20 }}>
-        <a href="/">Products</a> | <a href="/orders">Orders</a>
-      </nav>
+  const openOrders = orders.filter((order) => order.status === "PENDING" || order.status === "RESERVED").length;
+  const paidOrders = orders.filter((order) => order.status === "PAID").length;
+  const revenue = orders.filter((order) => order.status === "PAID").reduce((sum, order) => sum + order.total, 0);
 
-      <table width="100%" cellPadding={8} style={{ borderCollapse: "collapse" }}>
-        <thead>
-          <tr style={{ borderBottom: "2px solid #ccc", textAlign: "left" }}>
-            <th>ID</th>
-            <th>Items</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Expires</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((o) => (
-            <tr key={o._id} style={{ borderBottom: "1px solid #eee" }}>
-              <td style={{ fontFamily: "monospace", fontSize: 12 }}>
-                {o._id.slice(-6)}
-              </td>
-              <td>
-                {o.items.map((i) => `${i.name} x${i.qty}`).join(", ")}
-              </td>
-              <td>${o.total.toFixed(2)}</td>
-              <td>
-                <span
-                  style={{
-                    color: "#fff",
-                    background: STATUS_COLORS[o.status] ?? "#333",
-                    padding: "2px 8px",
-                    borderRadius: 4,
-                    fontSize: 12,
-                  }}
-                >
-                  {o.status}
-                </span>
-              </td>
-              <td style={{ fontSize: 12 }}>
-                {o.expiresAt ? new Date(o.expiresAt).toLocaleTimeString() : "—"}
-              </td>
-              <td>
-                {o.status === "PENDING" && (
-                  <button disabled={busyId === o._id} onClick={() => checkout(o._id)}>
-                    Checkout
-                  </button>
-                )}
-                {o.status === "RESERVED" && (
-                  <>
-                    <button disabled={busyId === o._id} onClick={() => pay(o._id, "success")}>
-                      Pay ✓
-                    </button>{" "}
-                    <button disabled={busyId === o._id} onClick={() => pay(o._id, "failure")}>
-                      Pay ✗
-                    </button>{" "}
-                    <button disabled={busyId === o._id} onClick={() => pay(o._id, "timeout")}>
-                      Pay ⏱
-                    </button>
-                  </>
-                )}
-                {(o.status === "PENDING" || o.status === "RESERVED" || o.status === "PAID") && (
-                  <>
-                    {" "}
-                    <button disabled={busyId === o._id} onClick={() => cancel(o._id)}>
-                      Cancel
-                    </button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </main>
-  );
-}
+  return (
+      <div className="app-shell">
+        <header className="topbar">
+          <div className="brand"><span className="brand-mark">L</span> Ledger</div>
+          <span className="topbar-note">Inventory operations / live workspace</span>
+        </header>
+        <main className="workspace">
+          <div className="page-heading">
+            <div><p className="eyebrow">Order desk</p><h1>Orders</h1><p className="lede">Track reservations, payments, and the next action for every sale.</p></div>
+            <nav className="nav-tabs" aria-label="Primary navigation"><a href="/">Products</a><a className="active" href="/orders">Orders</a></nav>
+          </div>
+          <section className="stat-grid" aria-label="Order summary">
+            <div className="stat-card"><span className="stat-label">Total orders</span><strong className="stat-value">{orders.length}</strong></div>
+            <div className="stat-card"><span className="stat-label">Needs attention</span><strong className="stat-value">{openOrders}</strong></div>
+            <div className="stat-card"><span className="stat-label">Paid revenue</span><strong className="stat-value">${revenue.toFixed(2)} <small className="panel-caption">/ {paidOrders} paid</small></strong></div>
+          </section>
+          <section className="panel">
+            <div className="panel-header"><h2 className="panel-title">Order activity</h2><span className="panel-caption">Newest first</span></div>
+            <div className="table-wrap"><table className="data-table"><thead><tr><th>Order</th><th>Items</th><th>Total</th><th>Status</th><th>Reservation</th><th>Actions</th></tr></thead><tbody>
+              {orders.length === 0 ? <tr><td colSpan={6} className="empty-state">No orders yet. Orders will appear here once created.</td></tr> : orders.map((order) => <tr key={order._id}>
+                <td><div className="product-name">#{order._id.slice(-6)}</div><div className="product-id">{new Date(order.createdAt).toLocaleDateString()}</div></td>
+                <td>{order.items.map((item) => `${item.name} x${item.qty}`).join(", ")}</td>
+                <td className="number-cell">${order.total.toFixed(2)}</td>
+                <td><span className={`status ${STATUS_CLASS[order.status] ?? "status-cancelled"}`}>{order.status}</span></td>
+                <td className="panel-caption">{order.expiresAt ? new Date(order.expiresAt).toLocaleTimeString() : "No timer"}</td>
+                <td><div className="order-actions">
+                  {order.status === "PENDING" && <button className="button-primary" disabled={busyId === order._id} onClick={() => checkout(order._id)}>Checkout</button>}
+                  {order.status === "RESERVED" && <><button className="button-primary" disabled={busyId === order._id} onClick={() => pay(order._id, "success")}>Pay</button><button className="button-quiet" disabled={busyId === order._id} onClick={() => pay(order._id, "failure")}>Decline</button></>}
+                  {(order.status === "PENDING" || order.status === "RESERVED" || order.status === "PAID") && <button className="button-danger" disabled={busyId === order._id} onClick={() => cancel(order._id)}>Cancel</button>}
+                </div></td>
+              </tr>)}
+            </tbody></table></div>
+          </section>
+        </main>
+      </div>
+    );
+  }

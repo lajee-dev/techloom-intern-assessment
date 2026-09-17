@@ -1,6 +1,6 @@
 // lib/db.ts
 import mongoose from "mongoose";
-import { MongoMemoryServer } from "mongodb-memory-server";
+import { MongoMemoryReplSet } from "mongodb-memory-server";
 
 const MONGODB_URI = process.env.MONGODB_URI ?? "";
 
@@ -12,7 +12,7 @@ interface MongooseCache {
 declare global {
   // eslint-disable-next-line no-var
   var _mongoose: MongooseCache | undefined;
-  var _memoryMongoServer: MongoMemoryServer | undefined;
+  var _memoryMongoServer: MongoMemoryReplSet | undefined;
 }
 
 const cached: MongooseCache = global._mongoose ?? { conn: null, promise: null };
@@ -23,11 +23,9 @@ if (!global._mongoose) {
 
 async function ensureMemoryMongo(): Promise<string> {
   if (!global._memoryMongoServer) {
-    const memoryServerOptions = {
+    global._memoryMongoServer = await MongoMemoryReplSet.create({
       replSet: { count: 1 },
-    } as any;
-
-    global._memoryMongoServer = await MongoMemoryServer.create(memoryServerOptions);
+    });
   }
 
   return global._memoryMongoServer.getUri();
@@ -39,13 +37,18 @@ export async function dbConnect(): Promise<typeof mongoose> {
   }
 
   const candidates: string[] = [];
+  const supportsTransactions = MONGODB_URI.startsWith("mongodb+srv://") || MONGODB_URI.includes("replicaSet=");
 
-  if (MONGODB_URI) {
+  if (MONGODB_URI && (process.env.NODE_ENV === "production" || supportsTransactions)) {
     candidates.push(MONGODB_URI);
   }
 
   if (process.env.NODE_ENV !== "production") {
     candidates.push(await ensureMemoryMongo());
+  }
+
+  if (MONGODB_URI && !candidates.includes(MONGODB_URI)) {
+    candidates.push(MONGODB_URI);
   }
 
   if (candidates.length === 0) {

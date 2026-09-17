@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
   await dbConnect();
   const body = await req.json();
 
-  const { name, price, stock } = body;
+  const { name, price, stock, imageUrl, imagePublicId } = body;
   if (!name || price == null || stock == null) {
     return Response.json(
       { error: "name, price, and stock are required" },
@@ -23,6 +23,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const product = await Product.create({ name, price, stock, reserved: 0 });
+  const product = await Product.create({ name, price, stock, imageUrl, imagePublicId, reserved: 0 });
   return Response.json(product, { status: 201 });
 }

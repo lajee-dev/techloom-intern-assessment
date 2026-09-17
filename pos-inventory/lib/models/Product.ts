@@ -3,6 +3,8 @@ import mongoose, { Schema, model, models, Document, Model } from "mongoose";
 
 export interface IProduct extends Document {
   name: string;
+  imageUrl?: string;
+  imagePublicId?: string;
   price: number;
   stock: number;
   reserved: number;
@@ -16,6 +18,14 @@ const ProductSchema = new Schema<IProduct>(
       type: String,
       required: true,
       trim: true,
+    },
+    imageUrl: {
+      type: String,
+      default: "",
+    },
+    imagePublicId: {
+      type: String,
+      default: "",
     },
     price: {
       type: Number,

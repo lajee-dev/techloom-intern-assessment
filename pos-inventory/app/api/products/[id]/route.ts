@@ -30,6 +30,8 @@ export async function PUT(
   if (name !== undefined) update.name = name;
   if (price !== undefined) update.price = price;
   if (stock !== undefined) update.stock = stock;
+  if (body.imageUrl !== undefined) update.imageUrl = body.imageUrl;
+  if (body.imagePublicId !== undefined) update.imagePublicId = body.imagePublicId;
 
   const product = await Product.findByIdAndUpdate(id, update, {
     new: true,
