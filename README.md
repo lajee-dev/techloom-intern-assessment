@@ -61,14 +61,18 @@ Production catalog data is defined in `ecommerce-checkout/data/products.json` an
 npm run seed:products
 ```
 
-**Deployment:** https://pos-inventory-phi.vercel.app/  
+## POS Inventory
+
+The POS inventory application is a separate Next.js project from `ecommerce-checkout`.
+
+**Live deployment:** https://pos-inventory-phi.vercel.app/
 **Repository:** https://github.com/lajee-dev/techloom-intern-assessment
 
-## Tech stack
+### Tech stack
 
 Next.js 16, TypeScript, MongoDB Atlas, Mongoose, Cloudinary, and Vercel.
 
-## Setup
+### Setup
 
 ```bash
 git clone https://github.com/lajee-dev/techloom-intern-assessment.git
@@ -89,7 +93,7 @@ CLOUDINARY_API_SECRET=your-cloudinary-api-secret
 
 Never commit `.env.local` or put secret values in this README.
 
-## Feature testing
+### Feature testing
 
 ### Product CRUD
 
@@ -171,14 +175,14 @@ To repeat the test:
 BASE_URL=https://pos-inventory-phi.vercel.app node scripts/concurrency-test.mjs
 ```
 
-## Verification
+### Verification
 
 ```bash
 npm run lint
 npm run build
 ```
 
-## Deploy
+### Deploy
 
 1. Push `main` to GitHub.
 2. Import the repository into Vercel.
