@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Fieldwork Supply Co.",
+  title: "ecommerce-checkout",
   description: "Considered goods for everyday rituals.",
 };
 
