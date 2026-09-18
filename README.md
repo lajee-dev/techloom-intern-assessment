@@ -1,4 +1,4 @@
-# POS Inventory
+# Techloom Intern Assessment
 
 This repository also contains the `ecommerce-checkout` application. Each app has its own Next.js project and dependencies.
 
@@ -17,6 +17,47 @@ npm run seed:products
 ```
 
 The checkout app includes the storefront, cookie-based cart, stock reservation, mock payment, order history, refunds, and expired-order cleanup routes.
+
+### Checkout UI
+
+- `/`: storefront grid with search, category, price, and stock filters
+- `/products/[id]`: product details and add to cart
+- `/cart`: cart management and checkout navigation
+- `/checkout`: stock reservation and mock payment
+- `/orders`: order history, cancellation, and refund actions
+
+### Checkout API
+
+| Method | Endpoint | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/products` | Search and filter products |
+| `GET` | `/api/products/[id]` | Product details |
+| `GET/POST/PATCH/DELETE` | `/api/cart` | Cookie-backed cart management |
+| `GET/POST` | `/api/orders` | Order history and order creation |
+| `POST` | `/api/orders/[id]/checkout` | Validate the reservation |
+| `POST` | `/api/orders/[id]/pay` | Complete mock payment |
+| `POST` | `/api/orders/[id]/cancel` | Cancel and release stock |
+| `POST` | `/api/orders/[id]/refund` | Record a mock refund |
+| `GET` | `/api/cron/release-expired` | Release expired reservations |
+
+### Checkout behavior
+
+Reservations use conditional MongoDB updates to prevent overselling. Pending orders expire after 15 minutes, and cancellation or expiry releases reserved stock. Authentication is substituted with an `httpOnly` `checkout_user_id` UUID cookie.
+
+Run checkout verification from its project directory:
+
+```bash
+cd ecommerce-checkout
+npm run test
+npm run lint
+npm run build
+```
+
+Production catalog data is defined in `ecommerce-checkout/data/products.json` and seeded with:
+
+```bash
+npm run seed:products
+```
 
 **Deployment:** https://pos-inventory-phi.vercel.app/  
 **Repository:** https://github.com/lajee-dev/techloom-intern-assessment
