@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import StoreHeader from "@/app/components/StoreHeader";
@@ -18,7 +19,7 @@ type Product = {
 function ProductVisual({ product }: { product: Product }) {
   return (
     <div className="product-visual">
-      {product.imageUrl ? <img src={product.imageUrl} alt="" /> : <><span className="visual-letter">{product.name.slice(0, 1)}</span><span className="visual-index">Fieldwork / object</span></>}
+      {product.imageUrl ? <Image src={product.imageUrl} alt="" fill sizes="(max-width: 560px) 100vw, (max-width: 850px) 50vw, 33vw" unoptimized /> : <><span className="visual-letter">{product.name.slice(0, 1)}</span><span className="visual-index">Fieldwork / object</span></>}
     </div>
   );
 }

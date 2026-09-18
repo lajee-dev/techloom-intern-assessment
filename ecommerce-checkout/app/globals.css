@@ -69,7 +69,7 @@ button, input, select { font: inherit; }
 .product-grid { display: grid; gap: 22px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .product-card { background: var(--paper); border: 1px solid var(--line); min-width: 0; }
 .product-card:hover .product-visual { transform: scale(1.025); }
-.product-visual { align-items: center; aspect-ratio: 1.2; background: #d9e5dd; color: var(--teal); display: flex; font-size: 3rem; font-weight: 850; justify-content: center; overflow: hidden; transition: transform .3s ease; }
+.product-visual { align-items: center; aspect-ratio: 1.2; background: #d9e5dd; color: var(--teal); display: flex; font-size: 3rem; font-weight: 850; justify-content: center; overflow: hidden; position: relative; transition: transform .3s ease; }
 .product-visual img { height: 100%; object-fit: cover; width: 100%; }
 .visual-letter { font-size: 5rem; line-height: 1; }
 .visual-index { bottom: 14px; font-size: .64rem; font-weight: 800; left: 16px; letter-spacing: .12em; position: absolute; text-transform: uppercase; }
@@ -82,7 +82,7 @@ button, input, select { font: inherit; }
 .empty-state { border: 1px dashed var(--line); color: var(--muted); padding: 48px 24px; text-align: center; }
 .page-intro { align-items: end; display: flex; justify-content: space-between; gap: 30px; }
 .detail-grid { align-items: start; display: grid; gap: 64px; grid-template-columns: 1.1fr .9fr; }
-.detail-visual { aspect-ratio: 1; background: #d9e5dd; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.detail-visual { aspect-ratio: 1; background: #d9e5dd; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
 .detail-visual img { height: 100%; object-fit: cover; width: 100%; }
 .detail-copy { padding-top: 34px; }
 .detail-copy h1 { color: var(--teal); font-size: clamp(2.6rem, 5vw, 5rem); letter-spacing: -.07em; line-height: .94; margin: 12px 0 22px; }

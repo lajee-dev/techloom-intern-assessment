@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { use, useEffect, useState } from "react";
 
 import StoreHeader from "@/app/components/StoreHeader";
@@ -37,7 +38,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     <StoreHeader />
     <main className="page-shell">
       {product ? <div className="detail-grid">
-        <div className="detail-visual">{product.imageUrl ? <img src={product.imageUrl} alt={product.name} /> : product.name.slice(0, 1)}</div>
+        <div className="detail-visual">{product.imageUrl ? <Image src={product.imageUrl} alt={product.name} fill sizes="(max-width: 850px) 100vw, 55vw" unoptimized /> : product.name.slice(0, 1)}</div>
         <div className="detail-copy">
           <Link className="eyebrow" href="/">Back to collection</Link>
           <p className="product-meta" style={{ marginTop: 38 }}>{product.category}</p>
