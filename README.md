@@ -4,6 +4,8 @@ This repository also contains the `ecommerce-checkout` application. Each app has
 
 ## Ecommerce Checkout
 
+**Live deployment:** https://ecommerce-checkout-jet.vercel.app/
+
 ```bash
 cd ecommerce-checkout
 npm install

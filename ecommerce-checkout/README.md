@@ -2,6 +2,8 @@
 
 A Next.js checkout application for a small product catalog. It includes a storefront, cookie-backed cart, atomic stock reservations, mock payments, order history, refunds, and expired-order cleanup.
 
+**Live deployment:** https://ecommerce-checkout-jet.vercel.app/
+
 ## Setup
 
 ```bash
