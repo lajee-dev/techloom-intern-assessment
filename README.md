@@ -1,5 +1,23 @@
 # POS Inventory
 
+This repository also contains the `ecommerce-checkout` application. Each app has its own Next.js project and dependencies.
+
+## Ecommerce Checkout
+
+```bash
+cd ecommerce-checkout
+npm install
+npm run dev
+```
+
+Configure `ecommerce-checkout/.env.local` with a valid `MONGODB_URI`. To populate the product catalog, run:
+
+```bash
+npm run seed:products
+```
+
+The checkout app includes the storefront, cookie-based cart, stock reservation, mock payment, order history, refunds, and expired-order cleanup routes.
+
 **Deployment:** https://pos-inventory-phi.vercel.app/  
 **Repository:** https://github.com/lajee-dev/techloom-intern-assessment
 
