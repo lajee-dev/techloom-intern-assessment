@@ -31,6 +31,11 @@ export async function dbConnect(): Promise<typeof mongoose> {
     return cached.conn;
   }
 
+  if (cached.promise) {
+    cached.conn = await cached.promise;
+    return cached.conn;
+  }
+
   const candidateUris: string[] = [];
 
   if (process.env.MONGODB_URI) {

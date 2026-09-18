@@ -18,7 +18,7 @@ type Product = {
 function ProductVisual({ product }: { product: Product }) {
   return (
     <div className="product-visual">
-      {product.imageUrl ? <img src={product.imageUrl} alt="" /> : product.name.slice(0, 1)}
+      {product.imageUrl ? <img src={product.imageUrl} alt="" /> : <><span className="visual-letter">{product.name.slice(0, 1)}</span><span className="visual-index">Fieldwork / object</span></>}
     </div>
   );
 }
@@ -62,16 +62,32 @@ export default function Home() {
     setMessage(response.ok ? "Added to your cart." : "Could not add that item.");
   }
 
+  function clearFilters() {
+    setSearch("");
+    setCategory("");
+    setMinPrice("");
+    setMaxPrice("");
+    setInStock(false);
+  }
+
+  const hasFilters = Boolean(search || category || minPrice || maxPrice || inStock);
+
   return (
     <>
       <StoreHeader />
       <main className="page-shell">
-        <section className="page-intro">
+        <section className="hero-grid">
           <div>
             <p className="eyebrow">Small batch / considered goods</p>
             <h1 className="display-title">Useful things, made to last.</h1>
+            <p className="hero-copy">Objects with a quiet point of view for desks, kitchens, and daily rituals.</p>
           </div>
-          <p className="muted" style={{ maxWidth: 260 }}>Objects with a quiet point of view for desks, kitchens, and daily rituals.</p>
+          <aside className="hero-note">
+            <span className="hero-note-mark">FW / 24</span>
+            <p>For the considered everyday. A small collection of tactile, useful pieces selected with a long view.</p>
+            <span className="hero-note-line" />
+            <strong>06 / 06</strong>
+          </aside>
         </section>
 
         <section className="toolbar" aria-label="Product filters">
@@ -82,7 +98,13 @@ export default function Home() {
           <label style={{ alignItems: "center", display: "flex", gap: 8, minHeight: 46 }}><input type="checkbox" checked={inStock} onChange={(event) => setInStock(event.target.checked)} /> In stock</label>
         </section>
 
+        <div className="category-chips" aria-label="Quick categories">
+          <span className="field-label">Browse by</span>
+          {["Kitchen", "Home", "Desk"].map((item) => <button className={category === item ? "chip active" : "chip"} key={item} onClick={() => setCategory(category === item ? "" : item)}>{item}</button>)}
+        </div>
+
         {message && <p className="success" style={{ marginBottom: 22 }}>{message}</p>}
+        {!loading && <div className="collection-bar"><span>{products.length} {products.length === 1 ? "piece" : "pieces"} in the collection</span>{hasFilters && <button className="clear-button" onClick={clearFilters}>Clear filters</button>}</div>}
         {loading ? <p className="muted">Loading the collection...</p> : products.length === 0 ? <div className="empty-state">No pieces match those filters.</div> : (
           <section className="product-grid">
             {products.map((product) => {
