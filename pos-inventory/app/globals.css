@@ -423,9 +423,10 @@ h1 {
 .back-link:hover { color: var(--accent-dark); }
 
 .detail-panel {
-  background: rgba(255, 255, 255, 0.86);
+  background: linear-gradient(180deg, rgba(20, 29, 27, 0.94), rgba(15, 20, 19, 0.92));
   border: 1px solid var(--line);
   border-radius: 18px;
+  color: var(--foreground);
   display: grid;
   gap: clamp(28px, 6vw, 80px);
   grid-template-columns: minmax(280px, 1fr) minmax(280px, 1fr);
