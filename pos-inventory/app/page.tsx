@@ -22,6 +22,21 @@ interface CartItem {
   qty: number;
 }
 
+const formatLKR = (amount: number) =>
+  new Intl.NumberFormat("en-LK", {
+    style: "currency",
+    currency: "LKR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+
+const parseCurrencyInput = (value: string) => {
+  if (!value) return 0;
+  const cleaned = value.replace(/[^\d.]/g, "");
+  const rounded = Number(cleaned || 0);
+  return Number.isFinite(rounded) ? rounded : 0;
+};
+
 export default function ProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
@@ -80,7 +95,7 @@ export default function ProductsPage() {
     e.preventDefault();
     setLoading(true);
 
-    const payload = { name, price: Number(price), stock: Number(stock), imageUrl, imagePublicId };
+    const payload = { name, price: parseCurrencyInput(price), stock: Number(stock), imageUrl, imagePublicId };
 
     if (editingId) {
       await fetch(`/api/products/${editingId}`, {
@@ -189,7 +204,7 @@ export default function ProductsPage() {
 
         <form className="product-form" onSubmit={handleSubmit}>
           <div className="field"><label htmlFor="product-name">Product name</label><input id="product-name" placeholder="e.g. Ceramic mug" value={name} onChange={(e) => setName(e.target.value)} required /></div>
-          <div className="field"><label htmlFor="product-price">Price</label><input id="product-price" placeholder="0.00" type="number" min="0" step="0.01" value={price} onChange={(e) => setPrice(e.target.value)} required /></div>
+          <div className="field"><label htmlFor="product-price">Price (LKR)</label><input id="product-price" placeholder="0.00" inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value.replace(/[^\d.]/g, ""))} required /></div>
           <div className="field"><label htmlFor="product-stock">Opening stock</label><input id="product-stock" placeholder="0" type="number" min="0" value={stock} onChange={(e) => setStock(e.target.value)} required /></div>
           <div className="field image-field"><label htmlFor="product-image">Product image</label><div className="image-picker">{imageUrl && <Image className="upload-preview" src={imageUrl} alt="Selected product" width={39} height={39} />}<input id="product-image" type="file" accept="image/*" onChange={(e) => handleImageChange(e.target.files?.[0])} disabled={uploadingImage} /></div><span className="field-hint">{uploadingImage ? "Uploading..." : imageUrl ? "Image ready" : "Optional, max 5 MB"}</span></div>
           <button className="button-primary" type="submit" disabled={loading}>{loading ? "Saving..." : editingId ? "Save changes" : "Add product"}</button>
@@ -205,7 +220,7 @@ export default function ProductsPage() {
                 {products.length === 0 ? <tr><td colSpan={6} className="empty-state">No products yet. Add your first item above.</td></tr> : products.map((p) => (
                   <tr key={p._id}>
                     <td><div className="product-cell">{p.imageUrl ? <Image className="product-thumb" src={p.imageUrl} alt="" width={42} height={42} /> : <span className="product-thumb product-thumb-empty">—</span>}<div><Link className="product-name product-link" href={`/products/${p._id}`}>{p.name}</Link><div className="product-id">ID {p._id.slice(-8)}</div></div></div></td>
-                    <td className="number-cell">${p.price.toFixed(2)}</td><td className="number-cell">{p.stock}</td><td className="number-cell">{p.reserved}</td>
+                    <td className="number-cell">{formatLKR(p.price)}</td><td className="number-cell">{p.stock}</td><td className="number-cell">{p.reserved}</td>
                     <td className={p.available < 5 ? "low-stock" : "available"}>{p.available}{p.available < 5 && " · low"}</td>
                     <td><div className="action-row"><button className="button-primary" onClick={() => addToCart(p)} disabled={p.available < 1}>Add</button><Link className="button-quiet" href={`/products/${p._id}`}>View</Link><button className="button-quiet" onClick={() => startEdit(p)}>Edit</button><button className="button-danger" onClick={() => handleDelete(p._id)}>Delete</button></div></td>
                   </tr>
@@ -219,11 +234,11 @@ export default function ProductsPage() {
           <div className="panel-header"><h2 className="panel-title">Current order</h2><span className="panel-caption">{cart.length} product{cart.length === 1 ? "" : "s"}</span></div>
           {cart.length === 0 ? <p className="empty-state">Add products above to start an order.</p> : <>
             <div className="cart-list">{cart.map((item) => <div className="cart-row" key={item.product._id}>
-              <div><strong>{item.product.name}</strong><span className="product-id">${item.product.price.toFixed(2)} each</span></div>
+              <div><strong>{item.product.name}</strong><span className="product-id">{formatLKR(item.product.price)} each</span></div>
               <input aria-label={`Quantity for ${item.product.name}`} className="quantity-input" type="number" min="1" max={item.product.available} value={item.qty} onChange={(event) => updateCartQuantity(item.product._id, Number(event.target.value))} />
-              <strong>${(item.product.price * item.qty).toFixed(2)}</strong>
+              <strong>{formatLKR(item.product.price * item.qty)}</strong>
             </div>)}</div>
-            <div className="cart-footer"><strong>Total ${cart.reduce((sum, item) => sum + item.product.price * item.qty, 0).toFixed(2)}</strong><button className="button-primary" onClick={createOrder} disabled={creatingOrder}>{creatingOrder ? "Creating..." : "Create order"}</button></div>
+            <div className="cart-footer"><strong>Total {formatLKR(cart.reduce((sum, item) => sum + item.product.price * item.qty, 0))}</strong><button className="button-primary" onClick={createOrder} disabled={creatingOrder}>{creatingOrder ? "Creating..." : "Create order"}</button></div>
             {orderMessage && <p className="form-error">{orderMessage}</p>}
           </>}
         </section>

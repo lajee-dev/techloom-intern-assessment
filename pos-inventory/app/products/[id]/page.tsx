@@ -14,6 +14,14 @@ interface Product {
   available: number;
 }
 
+const formatLKR = (amount: number) =>
+  new Intl.NumberFormat("en-LK", {
+    style: "currency",
+    currency: "LKR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+
 export default function ProductDetailPage({
   params,
 }: {
@@ -55,7 +63,7 @@ export default function ProductDetailPage({
               <p className="eyebrow">Product detail</p>
               <h1>{product.name}</h1>
               <p className="detail-id">ID {product._id}</p>
-              <strong className="detail-price">${product.price.toFixed(2)}</strong>
+              <strong className="detail-price">{formatLKR(product.price)}</strong>
               <div className="detail-stats">
                 <div><span>On hand</span><strong>{product.stock}</strong></div>
                 <div><span>Reserved</span><strong>{product.reserved}</strong></div>

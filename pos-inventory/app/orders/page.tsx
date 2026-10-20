@@ -30,6 +30,14 @@ const STATUS_CLASS: Record<string, string> = {
   FAILED: "status-failed",
 };
 
+const formatLKR = (amount: number) =>
+  new Intl.NumberFormat("en-LK", {
+    style: "currency",
+    currency: "LKR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -87,7 +95,7 @@ export default function OrdersPage() {
           <section className="stat-grid" aria-label="Order summary">
             <div className="stat-card"><span className="stat-label">Total orders</span><strong className="stat-value">{orders.length}</strong></div>
             <div className="stat-card"><span className="stat-label">Needs attention</span><strong className="stat-value">{openOrders}</strong></div>
-            <div className="stat-card"><span className="stat-label">Paid revenue</span><strong className="stat-value">${revenue.toFixed(2)} <small className="panel-caption">/ {paidOrders} paid</small></strong></div>
+            <div className="stat-card"><span className="stat-label">Paid revenue</span><strong className="stat-value">{formatLKR(revenue)} <small className="panel-caption">/ {paidOrders} paid</small></strong></div>
           </section>
           <section className="panel">
             <div className="panel-header"><h2 className="panel-title">Order activity</h2><span className="panel-caption">Newest first</span></div>
@@ -95,7 +103,7 @@ export default function OrdersPage() {
               {orders.length === 0 ? <tr><td colSpan={6} className="empty-state">No orders yet. Orders will appear here once created.</td></tr> : orders.map((order) => <tr key={order._id}>
                 <td><div className="product-name">#{order._id.slice(-6)}</div><div className="product-id">{new Date(order.createdAt).toLocaleDateString()}</div></td>
                 <td>{order.items.map((item) => `${item.name} x${item.qty}`).join(", ")}</td>
-                <td className="number-cell">${order.total.toFixed(2)}</td>
+                <td className="number-cell">{formatLKR(order.total)}</td>
                 <td><span className={`status ${STATUS_CLASS[order.status] ?? "status-cancelled"}`}>{order.status}</span></td>
                 <td className="panel-caption">{order.expiresAt ? new Date(order.expiresAt).toLocaleTimeString() : "No timer"}</td>
                 <td><div className="order-actions">
